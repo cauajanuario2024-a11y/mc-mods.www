@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MC Creations</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0e0c;--panel:#131813;--card:#161e16;--border:#253025;
+  --green:#4ade80;--lime:#a3e635;--dark-g:#166534;--muted:#4b6e4b;
+  --text:#d1fae5;--sub:#6b9e7a;--red:#f87171;--amber:#fbbf24;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(circle,rgba(74,222,128,.05) 1px,transparent 1px);
+  background-size:28px 28px;}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:200;display:flex;align-items:center;
+  justify-content:space-between;padding:0 2rem;height:64px;
+  background:rgba(12,14,12,.93);border-bottom:2px solid var(--border);
+  backdrop-filter:blur(12px);}
+.logo{font-family:'Press Start 2P',monospace;font-size:.85rem;color:var(--lime);
+  text-shadow:0 0 18px rgba(163,230,53,.4);letter-spacing:1px;user-select:none;}
+.logo em{color:var(--green);font-style:normal;}
+.edit-badge{display:none;align-items:center;gap:8px;
+  background:rgba(251,191,36,.1);border:2px solid var(--amber);
+  border-radius:4px;padding:5px 12px;
+  font-family:'Press Start 2P',monospace;font-size:.38rem;color:var(--amber);}
+.edit-badge.show{display:flex;}
+.exit-edit{background:transparent;border:none;color:var(--amber);
+  cursor:pointer;font-size:.95rem;margin-left:4px;opacity:.7;}
+.exit-edit:hover{opacity:1;}
+.header-nav{display:flex;gap:.5rem;}
+.nav-btn{background:transparent;border:2px solid var(--border);color:var(--sub);
+  padding:7px 16px;border-radius:4px;font-family:'Press Start 2P',monospace;
+  font-size:.42rem;cursor:pointer;letter-spacing:1px;transition:all .2s;}
+.nav-btn:hover,.nav-btn.on{border-color:var(--green);color:var(--lime);background:rgba(74,222,128,.06);}
+
+/* HERO */
+.hero{position:relative;z-index:1;text-align:center;padding:4rem 1.5rem 2.5rem;}
+.hero-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:600px;height:300px;
+  background:radial-gradient(ellipse,rgba(74,222,128,.1) 0%,transparent 70%);
+  pointer-events:none;}
+.hero h1{font-family:'Press Start 2P',monospace;font-size:clamp(1rem,3.5vw,2rem);
+  color:var(--lime);text-shadow:0 0 40px rgba(163,230,53,.35),0 4px 0 #0a3b1a;
+  line-height:1.5;margin-bottom:.75rem;}
+.hero p{font-size:1.15rem;color:var(--sub);margin-bottom:2rem;}
+.hero-counts{display:inline-flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;}
+.hcount{background:var(--card);border:2px solid var(--border);border-radius:6px;
+  padding:.75rem 1.5rem;min-width:110px;text-align:center;}
+.hcount-n{font-family:'Press Start 2P',monospace;font-size:1.3rem;color:var(--green);
+  display:block;margin-bottom:.25rem;}
+.hcount-l{font-size:.95rem;color:var(--sub);}
+
+/* TABS */
+.tabs{position:relative;z-index:1;display:flex;border-bottom:2px solid var(--border);
+  padding:0 2rem;overflow-x:auto;}
+.tab{background:transparent;border:none;border-bottom:3px solid transparent;color:var(--sub);
+  padding:.85rem 1.4rem;font-family:'Press Start 2P',monospace;font-size:.44rem;
+  cursor:pointer;letter-spacing:1px;white-space:nowrap;transition:all .2s;margin-bottom:-2px;}
+.tab:hover{color:var(--green);}
+.tab.on{color:var(--lime);border-bottom-color:var(--lime);}
+
+/* MAIN */
+main{position:relative;z-index:1;max-width:1360px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.page{display:none;}.page.on{display:block;}
+.fbar{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.fbar input,.fbar select{background:var(--card);border:2px solid var(--border);
+  border-radius:5px;color:var(--text);padding:9px 14px;font-family:'Nunito',sans-serif;
+  font-size:1rem;outline:none;flex:1;min-width:160px;transition:border-color .2s;}
+.fbar input:focus,.fbar select:focus{border-color:var(--green);}
+.fbar select option{background:var(--panel);}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.25rem;}
+
+/* CARD */
+.card{background:var(--card);border:2px solid var(--border);border-radius:8px;
+  overflow:hidden;transition:all .25s;animation:fadeUp .35s ease both;position:relative;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.card:hover{border-color:var(--green);transform:translateY(-4px);
+  box-shadow:0 8px 32px rgba(74,222,128,.18);}
+.card-img{width:100%;height:170px;
+  background:linear-gradient(135deg,#0d1a0d,#1a3a1a);
+  display:flex;align-items:center;justify-content:center;
+  border-bottom:2px solid var(--border);position:relative;overflow:hidden;}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.card:hover .card-img img{transform:scale(1.04);}
+.fallback{font-size:4.5rem;line-height:1;}
+.chip{position:absolute;top:8px;right:8px;font-family:'Press Start 2P',monospace;
+  font-size:.35rem;padding:4px 9px;border-radius:3px;letter-spacing:1px;}
+.chip-mod{background:#1d4ed8;color:#bfdbfe;}
+.chip-skin{background:#92400e;color:#fde68a;}
+.del-btn{position:absolute;top:8px;left:8px;
+  background:rgba(248,113,113,.92);border:none;border-radius:4px;
+  color:#fff;width:30px;height:30px;cursor:pointer;font-size:1rem;
+  display:none;align-items:center;justify-content:center;z-index:5;transition:background .2s;}
+.del-btn:hover{background:var(--red);}
+.edit-mode .del-btn{display:flex;}
+.card-body{padding:1rem;}
+.card-title{font-family:'Press Start 2P',monospace;font-size:.55rem;color:var(--lime);
+  line-height:1.7;margin-bottom:.5rem;}
+.card-desc{font-size:.95rem;color:var(--sub);line-height:1.5;margin-bottom:.8rem;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.card-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.9rem;}
+.tag{background:rgba(74,222,128,.08);border:1px solid var(--border);border-radius:3px;
+  color:var(--muted);padding:2px 9px;font-size:.85rem;}
+.card-foot{display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--border);padding-top:.75rem;}
+.card-meta{font-size:.85rem;color:var(--muted);}
+.dl-btn{display:inline-flex;align-items:center;gap:6px;background:var(--dark-g);
+  border:2px solid var(--green);border-radius:4px;color:var(--lime);
+  padding:6px 14px;font-family:'Press Start 2P',monospace;font-size:.38rem;
+  cursor:pointer;text-decoration:none;transition:all .2s;letter-spacing:1px;}
+.dl-btn:hover{background:var(--green);color:#000;box-shadow:0 0 14px rgba(74,222,128,.4);}
+
+/* EMPTY */
+.empty{grid-column:1/-1;text-align:center;padding:4rem 2rem;}
+.empty .eico{font-size:4rem;display:block;margin-bottom:1rem;}
+.empty p{font-family:'Press Start 2P',monospace;font-size:.55rem;color:var(--sub);line-height:2.2;}
+
+/* FAB - só em edit mode */
+.fab{position:fixed;bottom:2rem;right:2rem;z-index:300;
+  background:var(--amber);border:none;border-radius:50%;
+  width:58px;height:58px;font-size:1.7rem;cursor:pointer;
+  box-shadow:0 4px 24px rgba(251,191,36,.5);
+  transition:all .2s;display:none;align-items:center;justify-content:center;color:#000;}
+.fab:hover{background:var(--lime);transform:scale(1.1) rotate(45deg);}
+.edit-mode .fab{display:flex;}
+
+/* OVERLAYS */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;
+  display:none;align-items:center;justify-content:center;padding:1rem;
+  backdrop-filter:blur(5px);}
+.overlay.on{display:flex;}
+
+/* modal senha */
+.pwd-modal{background:var(--panel);border:2px solid var(--border);border-radius:10px;
+  width:100%;max-width:360px;padding:2rem;position:relative;animation:popIn .25s ease;}
+@keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.pwd-title{font-family:'Press Start 2P',monospace;font-size:.65rem;color:var(--lime);
+  text-align:center;margin-bottom:1.5rem;line-height:1.8;}
+.pwd-err{background:rgba(248,113,113,.1);border:2px solid var(--red);border-radius:4px;
+  color:var(--red);padding:8px 12px;font-family:'Press Start 2P',monospace;
+  font-size:.4rem;text-align:center;margin-bottom:1rem;line-height:1.8;display:none;}
+.pwd-input{width:100%;background:#0c0e0c;border:2px solid var(--border);border-radius:5px;
+  color:var(--text);padding:11px 14px;font-family:'Nunito',sans-serif;font-size:1.1rem;
+  outline:none;transition:border-color .2s;margin-bottom:1rem;}
+.pwd-input:focus{border-color:var(--green);}
+.pwd-btn{width:100%;background:var(--dark-g);border:2px solid var(--green);border-radius:5px;
+  color:var(--lime);padding:12px;font-family:'Press Start 2P',monospace;
+  font-size:.55rem;cursor:pointer;letter-spacing:2px;transition:all .2s;}
+.pwd-btn:hover{background:var(--green);color:#000;}
+.mclose{position:absolute;top:.75rem;right:.75rem;background:transparent;
+  border:none;color:var(--sub);cursor:pointer;font-size:1.1rem;transition:color .2s;}
+.mclose:hover{color:var(--red);}
+
+/* modal add */
+.add-modal{background:var(--panel);border:2px solid var(--border);border-radius:10px;
+  width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:2rem;
+  position:relative;animation:popIn .25s ease;}
+.add-title{font-family:'Press Start 2P',monospace;font-size:.7rem;color:var(--lime);
+  margin-bottom:1.5rem;}
+.type-toggle{display:flex;gap:.5rem;margin-bottom:1.5rem;}
+.type-btn{flex:1;padding:.75rem;background:transparent;border:2px solid var(--border);
+  border-radius:5px;color:var(--sub);font-family:'Press Start 2P',monospace;
+  font-size:.44rem;cursor:pointer;transition:all .2s;letter-spacing:1px;}
+.type-btn.on{border-color:var(--green);color:var(--lime);background:rgba(74,222,128,.08);}
+.fg{margin-bottom:1.1rem;}
+.fg label{display:block;font-family:'Press Start 2P',monospace;font-size:.4rem;
+  color:var(--sub);margin-bottom:.5rem;letter-spacing:1px;}
+.fg input,.fg textarea,.fg select{width:100%;background:#0c0e0c;border:2px solid var(--border);
+  border-radius:5px;color:var(--text);padding:10px 13px;font-family:'Nunito',sans-serif;
+  font-size:1rem;outline:none;transition:border-color .2s;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--green);}
+.fg textarea{resize:vertical;min-height:78px;}
+.fg select option{background:var(--panel);}
+
+/* upload zone */
+.uzone{border:2px dashed var(--border);border-radius:6px;padding:1.4rem;
+  text-align:center;cursor:pointer;transition:all .2s;position:relative;background:rgba(0,0,0,.2);}
+.uzone:hover,.uzone.drag{border-color:var(--green);background:rgba(74,222,128,.04);}
+.uzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.uzone .uico{font-size:2rem;display:block;margin-bottom:.4rem;}
+.uzone p{font-size:.95rem;color:var(--sub);}
+.uname{font-weight:700;font-size:.9rem;margin-top:.4rem;display:none;color:var(--green);}
+.img-prev{width:100%;height:120px;object-fit:cover;border-radius:5px;
+  border:2px solid var(--border);margin-top:.5rem;display:none;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+@media(max-width:500px){.row2{grid-template-columns:1fr;}}
+.submit-btn{width:100%;margin-top:.5rem;background:var(--dark-g);border:2px solid var(--green);
+  border-radius:5px;color:var(--lime);padding:13px;font-family:'Press Start 2P',monospace;
+  font-size:.55rem;cursor:pointer;letter-spacing:2px;transition:all .2s;}
+.submit-btn:hover{background:var(--green);color:#000;box-shadow:0 0 18px rgba(74,222,128,.4);}
+
+/* trocar senha - dentro do modal add */
+.change-pwd{margin-top:1.5rem;padding-top:1.5rem;border-top:2px solid var(--border);}
+.change-pwd-title{font-family:'Press Start 2P',monospace;font-size:.45rem;
+  color:var(--amber);margin-bottom:1rem;letter-spacing:1px;}
+
+/* toast */
+.toast{position:fixed;bottom:2rem;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--dark-g);border:2px solid var(--green);border-radius:6px;
+  color:var(--lime);padding:.85rem 1.5rem;font-family:'Press Start 2P',monospace;
+  font-size:.45rem;z-index:9999;transition:transform .3s;
+  white-space:nowrap;box-shadow:0 0 24px rgba(74,222,128,.3);
+  letter-spacing:1px;pointer-events:none;}
+.toast.on{transform:translateX(-50%) translateY(0);}
+
+::-webkit-scrollbar{width:7px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--dark-g);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--green);}
+footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:.9rem;
+  border-top:2px solid var(--border);position:relative;z-index:1;}
+footer b{color:var(--green);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">&#9935; <em>MC</em>Creations</div>
+  <div style="display:flex;align-items:center;gap:.75rem;">
+    <div class="edit-badge" id="edit-badge">
+      &#9999;&#65039; MODO EDICAO
+      <button class="exit-edit" onclick="exitEdit()" title="Sair do modo edicao">&#10005;</button>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn on" onclick="goTab('mods',this)">&#128295; Mods</button>
+      <button class="nav-btn"   onclick="goTab('skins',this)">&#127912; Skins</button>
+      <button class="nav-btn"   onclick="goTab('all',this)">&#128230; Tudo</button>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-glow"></div>
+  <h1>MC Creations</h1>
+  <p>Mods e Skins que eu criei &mdash; baixe e use!</p>
+  <div class="hero-counts">
+    <div class="hcount"><span class="hcount-n" id="n-mods">0</span><span class="hcount-l">&#128295; Mods</span></div>
+    <div class="hcount"><span class="hcount-n" id="n-skins">0</span><span class="hcount-l">&#127912; Skins</span></div>
+    <div class="hcount"><span class="hcount-n" id="n-all">0</span><span class="hcount-l">&#128230; Total</span></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" onclick="goTab('mods',this)">&#128295; Mods</button>
+  <button class="tab"   onclick="goTab('skins',this)">&#127912; Skins</button>
+  <button class="tab"   onclick="goTab('all',this)">&#128230; Tudo</button>
+</div>
+
+<main>
+  <div class="page on" id="page-mods">
+    <div class="fbar">
+      <input type="text" placeholder="Buscar mod..." oninput="render()">
+      <select onchange="render()">
+        <option value="">Todas as versoes</option>
+        <option>1.21</option><option>1.20</option><option>1.19</option>
+        <option>1.18</option><option>1.17</option><option>1.16</option>
+        <option>1.12</option><option>1.8</option>
+      </select>
+    </div>
+    <div class="grid" id="grid-mods"></div>
+  </div>
+
+  <div class="page" id="page-skins">
+    <div class="fbar">
+      <input type="text" placeholder="Buscar skin..." oninput="render()">
+      <select onchange="render()">
+        <option value="">Todos os estilos</option>
+        <option>Anime</option><option>Herois</option><option>PvP</option>
+        <option>Medieval</option><option>Moderno</option><option>Pixel Art</option>
+        <option>Fantasia</option><option>Original</option>
+      </select>
+    </div>
+    <div class="grid" id="grid-skins"></div>
+  </div>
+
+  <div class="page" id="page-all">
+    <div class="fbar">
+      <input type="text" placeholder="Buscar tudo..." oninput="render()">
+    </div>
+    <div class="grid" id="grid-all"></div>
+  </div>
+</main>
+
+<!-- FAB so aparece em edit mode -->
+<button class="fab" onclick="openAdd()" title="Adicionar">+</button>
+
+<!-- OVERLAY SENHA -->
+<div class="overlay" id="ovl-pwd" onclick="if(event.target===this)closePwd()">
+  <div class="pwd-modal">
+    <button class="mclose" onclick="closePwd()">&#10005;</button>
+    <div class="pwd-title">&#128272; Area do Criador</div>
+    <div class="pwd-err" id="pwd-err">Senha incorreta! Tente de novo.</div>
+    <input class="pwd-input" type="password" id="pwd-in"
+      placeholder="Digite a senha..."
+      onkeydown="if(event.key==='Enter')checkPwd()">
+    <button class="pwd-btn" onclick="checkPwd()">ENTRAR</button>
+  </div>
+</div>
+
+<!-- OVERLAY ADD -->
+<div class="overlay" id="ovl-add" onclick="if(event.target===this)closeAdd()">
+  <div class="add-modal">
+    <button class="mclose" onclick="closeAdd()">&#10005;</button>
+    <div class="add-title">+ Adicionar Conteudo</div>
+
+    <div class="type-toggle">
+      <button class="type-btn on" id="btn-mod"  onclick="setType('mod')">&#128295; MOD</button>
+      <button class="type-btn"    id="btn-skin" onclick="setType('skin')">&#127912; SKIN</button>
+    </div>
+
+    <div class="row2">
+      <div class="fg">
+        <label>NOME *</label>
+        <input type="text" id="f-name" placeholder="Ex: SuperTools Mod">
+      </div>
+      <div class="fg">
+        <label>ICONE (emoji)</label>
+        <input type="text" id="f-emoji" placeholder="🔧" maxlength="4" value="🔧">
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>DESCRICAO</label>
+      <textarea id="f-desc" placeholder="O que e esse mod ou skin..."></textarea>
+    </div>
+
+    <div class="row2">
+      <div class="fg" id="fg-ver">
+        <label>VERSAO DO MC</label>
+        <select id="f-ver">
+          <option>1.21</option><option>1.20</option><option>1.19</option>
+          <option>1.18</option><option>1.17</option><option>1.16</option>
+          <option>1.12</option><option>1.8</option>
+        </select>
+      </div>
+      <div class="fg" id="fg-style" style="display:none">
+        <label>ESTILO</label>
+        <select id="f-style">
+          <option>Anime</option><option>Herois</option><option>PvP</option>
+          <option>Medieval</option><option>Moderno</option><option>Pixel Art</option>
+          <option>Fantasia</option><option>Original</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>TAGS (virgula)</label>
+        <input type="text" id="f-tags" placeholder="PvP, Survival...">
+      </div>
+    </div>
+
+    <!-- upload imagem -->
+    <div class="fg">
+      <label>IMAGEM DE CAPA (upload)</label>
+      <div class="uzone" id="uz-img">
+        <input type="file" id="f-img" accept="image/*" onchange="handleImg(event)">
+        <span class="uico">&#128444;</span>
+        <p>Clique ou arraste uma imagem aqui</p>
+        <span class="uname" id="uz-img-name"></span>
+      </div>
+      <img id="img-prev" class="img-prev" alt="preview">
+    </div>
+
+    <!-- upload arquivo -->
+    <div class="fg">
+      <label>ARQUIVO DO MOD / SKIN (upload .jar .zip .png)</label>
+      <div class="uzone" id="uz-file">
+        <input type="file" id="f-file" onchange="handleFile(event)">
+        <span class="uico">&#128193;</span>
+        <p>Clique ou arraste o arquivo aqui</p>
+        <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem">maximo 4 MB por arquivo</p>
+        <span class="uname" id="uz-file-name"></span>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="submitItem()">SALVAR</button>
+
+    <!-- trocar senha -->
+    <div class="change-pwd">
+      <div class="change-pwd-title">ALTERAR SENHA</div>
+      <div class="row2">
+        <div class="fg">
+          <label>SENHA ATUAL</label>
+          <input type="password" id="cp-cur" placeholder="••••••••">
+        </div>
+        <div class="fg">
+          <label>NOVA SENHA</label>
+          <input type="password" id="cp-new" placeholder="••••••••">
+        </div>
+      </div>
+      <button class="submit-btn" style="background:rgba(251,191,36,.1);border-color:var(--amber);color:var(--amber);"
+        onclick="changePwd()">SALVAR NOVA SENHA</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>Feito com <b>amor + picareta</b> &mdash; MC Creations</footer>
+
+<script>
+// ═══════════════════════════
+//  SENHA  (hash, sem banco)
+// ═══════════════════════════
+function hash(s){
+  let h=0;
+  for(let i=0;i<s.length;i++) h=Math.imul(31,h)+s.charCodeAt(i)|0;
+  return 'H'+Math.abs(h).toString(16);
+}
+function getPwdHash(){ return localStorage.getItem('mc_pwd')||hash('admin123'); }
+
+// ═══════════════════════════
+//  EDIT MODE
+// ═══════════════════════════
+let editMode=false;
+
+function enterEdit(){
+  editMode=true;
+  document.body.classList.add('edit-mode');
+  document.getElementById('edit-badge').classList.add('show');
+  render();
+}
+function exitEdit(){
+  editMode=false;
+  document.body.classList.remove('edit-mode');
+  document.getElementById('edit-badge').classList.remove('show');
+  render();
+}
+
+// ═══════════════════════════
+//  ATALHO: Ctrl + Shift + A
+// ═══════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey && e.shiftKey && e.key==='A'){
+    e.preventDefault();
+    if(editMode){ exitEdit(); return; }
+    openPwd();
+  }
+});
+
+// ═══════════════════════════
+//  MODAL SENHA
+// ═══════════════════════════
+function openPwd(){
+  document.getElementById('ovl-pwd').classList.add('on');
+  document.getElementById('pwd-in').value='';
+  document.getElementById('pwd-err').style.display='none';
+  setTimeout(()=>document.getElementById('pwd-in').focus(),80);
+}
+function closePwd(){
+  document.getElementById('ovl-pwd').classList.remove('on');
+}
+function checkPwd(){
+  const v=document.getElementById('pwd-in').value;
+  if(!v) return;
+  if(hash(v)===getPwdHash()){
+    closePwd(); enterEdit();
+    toast('Modo edicao ativado!');
+  } else {
+    const er=document.getElementById('pwd-err');
+    er.style.display='block';
+    document.getElementById('pwd-in').value='';
+    setTimeout(()=>er.style.display='none',2500);
+  }
+}
+
+function changePwd(){
+  const cur=document.getElementById('cp-cur').value;
+  const nw=document.getElementById('cp-new').value;
+  if(!cur||!nw){ toast('Preencha os campos!'); return; }
+  if(hash(cur)!==getPwdHash()){ toast('Senha atual incorreta!'); return; }
+  if(nw.length<4){ toast('Senha muito curta! Min 4 caracteres.'); return; }
+  localStorage.setItem('mc_pwd',hash(nw));
+  document.getElementById('cp-cur').value='';
+  document.getElementById('cp-new').value='';
+  toast('Senha alterada!');
+}
+
+// ═══════════════════════════
+//  STORAGE
+// ═══════════════════════════
+function getItems(){
+  try{ return JSON.parse(localStorage.getItem('mc_items')||'[]'); }catch{ return []; }
+}
+function saveItems(arr){
+  try{ localStorage.setItem('mc_items',JSON.stringify(arr)); }
+  catch{ toast('Arquivo muito grande pro navegador!'); }
+}
+
+// ═══════════════════════════
+//  TABS
+// ═══════════════════════════
+let currentTab='mods';
+function goTab(tab,btn){
+  currentTab=tab;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('page-'+tab).classList.add('on');
+  document.querySelectorAll('.tab,.nav-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+// ═══════════════════════════
+//  RENDER
+// ═══════════════════════════
+function render(){
+  const all=getItems();
+  const mods=all.filter(i=>i.type==='mod');
+  const skins=all.filter(i=>i.type==='skin');
+  document.getElementById('n-mods').textContent=mods.length;
+  document.getElementById('n-skins').textContent=skins.length;
+  document.getElementById('n-all').textContent=all.length;
+  if(currentTab==='mods')  renderGrid('grid-mods', filt(mods));
+  if(currentTab==='skins') renderGrid('grid-skins',filt(skins));
+  if(currentTab==='all')   renderGrid('grid-all',  filt(all));
+}
+
+function filt(arr){
+  const pg=document.getElementById('page-'+currentTab);
+  const q=(pg?.querySelector('input')?.value||'').toLowerCase();
+  const sel=pg?.querySelector('select')?.value||'';
+  return arr.filter(i=>{
+    const mq=!q||i.name.toLowerCase().includes(q)||(i.desc||'').toLowerCase().includes(q);
+    const ms=!sel||i.ver===sel||i.style===sel;
+    return mq&&ms;
+  });
+}
+
+function renderGrid(id,items){
+  const g=document.getElementById(id);
+  if(!items.length){
+    g.innerHTML=`<div class="empty">
+      <span class="eico">&#128230;</span>
+      <p>Nada aqui ainda!<br>
+      <span style="font-size:.75em;color:var(--muted)">${editMode?'Clique no + pra adicionar':'Em breve...'}</span></p>
+    </div>`;
+    return;
+  }
+  g.innerHTML=items.map((it,i)=>makeCard(it,i)).join('');
+}
+
+function makeCard(it,i){
+  const isMod=it.type==='mod';
+  const imgHTML=it.imgData
+    ? `<img src="${it.imgData}" alt="${esc(it.name)}" onerror="this.remove()">`:'';
+  const dlBtn=it.fileData
+    ? `<a class="dl-btn" href="${it.fileData.b64}" download="${esc(it.fileData.name)}">&#11015; BAIXAR</a>`
+    : `<span style="color:var(--muted);font-size:.85rem">Sem arquivo</span>`;
+  const tags=(it.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
+  const meta=isMod?`MC ${esc(it.ver||'')}`:esc(it.style||'');
+  return `<div class="card" style="animation-delay:${i*.05}s">
+    <div class="card-img">
+      ${imgHTML}
+      <span class="fallback" ${imgHTML?'style="display:none"':''}>${esc(it.emoji||'📦')}</span>
+      <span class="chip ${isMod?'chip-mod':'chip-skin'}">${isMod?'MOD':'SKIN'}</span>
+      <button class="del-btn" onclick="delItem(${it.id})" title="Deletar">&#10005;</button>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${esc(it.name)}</div>
+      <div class="card-desc">${esc(it.desc||'Sem descricao.')}</div>
+      ${tags?`<div class="card-tags">${tags}</div>`:''}
+      <div class="card-foot">
+        <span class="card-meta">&#128197; ${esc(it.date||'')}${meta?' &bull; '+meta:''}</span>
+        ${dlBtn}
+      </div>
+    </div>
+  </div>`;
+}
+
+function delItem(id){
+  if(!confirm('Deletar este item?')) return;
+  saveItems(getItems().filter(i=>i.id!==id));
+  render(); toast('Item removido!');
+}
+
+// ═══════════════════════════
+//  MODAL ADD
+// ═══════════════════════════
+let currentType='mod', imgData=null, fileData=null;
+
+function openAdd(){
+  document.getElementById('ovl-add').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function closeAdd(){
+  document.getElementById('ovl-add').classList.remove('on');
+  document.body.style.overflow='';
+}
+function setType(t){
+  currentType=t;
+  document.getElementById('btn-mod').classList.toggle('on',t==='mod');
+  document.getElementById('btn-skin').classList.toggle('on',t==='skin');
+  document.getElementById('fg-ver').style.display=t==='mod'?'':'none';
+  document.getElementById('fg-style').style.display=t==='skin'?'':'none';
+  document.getElementById('f-emoji').value=t==='mod'?'🔧':'🎨';
+}
+
+function handleImg(e){
+  const file=e.target.files[0]; if(!file) return;
+  const rd=new FileReader();
+  rd.onload=ev=>{
+    imgData=ev.target.result;
+    const p=document.getElementById('img-prev');
+    p.src=imgData; p.style.display='block';
+    document.getElementById('uz-img-name').textContent='✅ '+file.name;
+    document.getElementById('uz-img-name').style.display='block';
+  };
+  rd.readAsDataURL(file);
+}
+
+function handleFile(e){
+  const file=e.target.files[0]; if(!file) return;
+  if(file.size>4*1024*1024){ toast('Arquivo maior que 4 MB!'); e.target.value=''; return; }
+  const rd=new FileReader();
+  rd.onload=ev=>{
+    fileData={name:file.name, b64:ev.target.result};
+    document.getElementById('uz-file-name').textContent='✅ '+file.name;
+    document.getElementById('uz-file-name').style.display='block';
+  };
+  rd.readAsDataURL(file);
+}
+
+function submitItem(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){ toast('Coloca um nome!'); return; }
+  const item={
+    id:Date.now(), type:currentType, name,
+    emoji:document.getElementById('f-emoji').value||(currentType==='mod'?'🔧':'🎨'),
+    desc:document.getElementById('f-desc').value.trim(),
+    ver:currentType==='mod'?document.getElementById('f-ver').value:'',
+    style:currentType==='skin'?document.getElementById('f-style').value:'',
+    tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    imgData:imgData||null, fileData:fileData||null,
+    date:new Date().toLocaleDateString('pt-BR'),
+  };
+  const arr=getItems(); arr.unshift(item); saveItems(arr);
+  resetForm(); closeAdd(); render();
+  toast((currentType==='mod'?'Mod':'Skin')+' adicionado(a)!');
+}
+
+function resetForm(){
+  ['f-name','f-desc','f-tags'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-emoji').value='🔧';
+  document.getElementById('img-prev').style.display='none';
+  document.getElementById('img-prev').src='';
+  ['uz-img-name','uz-file-name'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+    document.getElementById(id).textContent='';
+  });
+  document.getElementById('f-img').value='';
+  document.getElementById('f-file').value='';
+  imgData=null; fileData=null;
+}
+
+// drag & drop visual
+['uz-img','uz-file'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag');});
+  el.addEventListener('dragleave',()=>el.classList.remove('drag'));
+  el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drag');});
+});
+
+// ═══════════════════════════
+//  HELPERS
+// ═══════════════════════════
+function esc(s){
+  return String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+let toastT;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('on');
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>el.classList.remove('on'),3000);
+}
+
+render();
+</script>
+</body>
+</html>
